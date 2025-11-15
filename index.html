@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine Crown Holding</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #86868b;
+            --accent-color: #0066cc;
+            --light-text: #f5f5f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--light-text);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(to right, #0066cc, #00ff99);
+            z-index: 1001;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            padding: 0.8rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-links li {
+            margin: 0 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light-text);
+            font-size: 0.85rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Darker overlay */
+            z-index: 1;
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('back_img.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.7);
+            animation: scale 20s infinite alternate;
+            transform: translateZ(0);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;  /* Centers the logo and all content */
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff; /* Solid white color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for better readability */
+            /* Remove the gradient effect */
+            /*animation: floating 3s ease-in-out infinite;*/
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            color: #ffffff; /* Change from secondary-color to white */
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            position: relative;
+            z-index: 4;
+            width: 150px;  /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 20px;  /* Space between logo and heading */
+            animation: floating 3s infinite ease-in-out; /* Apply bounce animation */
+        }
+
+        /* General section styling */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 10% 40px; /* Added top padding to account for navbar */
+        }        
+
+        /* Services Section */
+        .services {
+            background-color: #000;
+            padding: 80px 10%;
+            min-height: 100vh;
+        }
+
+        .section-title {
+            margin-bottom: 60px;
+            font-size: 3rem;
+        }
+
+        .services-grid {
+            margin-top: 60px;
+            gap: 3rem; /* Increased gap between cards */
+        }
+
+        .service-card {
+            background: rgba(29, 29, 31, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: scale(1.02);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+        }
+
+        .service-card p {
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            min-height: 100vh;
+            background: #1d1d1f;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stats-container {
+            padding: 60px 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        /* Contact Section */
+        .contact {
+            min-height: 100vh;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info {
+            margin-top: 60px;
+        }
+
+        .contact-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+        }
+
+        .contact-info p {
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000;
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .social-icons {
+            margin: 1.5rem 0;
+        }
+
+        .social-icons i {
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            transition: color 0.3s;
+        }
+
+        .social-icons i:hover {
+            color: var(--light-text);
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: #ffffff; /* Change to white */
+            color: #000000; /* Change to black */
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Add smooth scrolling to html */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animations */
+        @keyframes scale {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress"></div>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#home">Alpine Crown</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#stats">Stats</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <img src="logo.png" alt="Alpine Crown Holding Logo" class="logo">
+            <h1>Alpine Crown Holding</h1>
+            <p>Redefining Investment Excellence<p>Where High Standards Meet Higher Returns</p></p>
+            <a href="#contact" class="cta-button">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- <section class="services" id="services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Investment Management</h3>
+                <p>Strategic portfolio management and investment solutions for optimal returns.</p>
+            </div>
+            <div class="service-card">
+                <h3>Real Estate Advisory</h3>
+                <p>Premium real estate investment opportunities and expert market guidance.</p>
+            </div>
+            <div class="service-card">
+                <h3>Strategic Acquisitions</h3>
+                <p>Identifying and executing high-value investment opportunities.</p>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="stats-section" id="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" data-target="150">0</div>
+                <p>Investments Made</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="49">0</div>
+                <p>Properties Managed</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="199">0</div>
+                <p>Client Satisfaction</p>
+            </div>
+        </div>
+    </section> -->
+
+    <section class="contact" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-info">
+            <!-- <div>
+                <h3>Visit</h3>
+                <p>[ADDRESS REMOVED FOR PRIVACY]</p>
+                <p>Sheridan, WY [ZIP REMOVED]</p>
+            </div> -->
+            <div>
+                <h3><a href="mailto:business@alpinecrownholding.com" class="cta-button">Connect</a></h3>
+                <!-- <p>Phone: [Coming Soon]</p>
+                <p>WhatsApp: [Coming Soon]</p> -->
+                <!-- <p><a href="mailto:business@alpinecrownholding.com">Send mail</a></p> -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-icons">
+            <i class="fab fa-twitter" title="Coming Soon"></i>
+            <i class="fab fa-instagram" title="Coming Soon"></i>
+            <i class="fab fa-facebook" title="Coming Soon"></i>
+        </div>
+        <p>&copy; 2025 Alpine Crown Holding. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.width = `${scrolled}%`;
+        });
+
+        // Stats Counter Animation
+        const statsSection = document.querySelector('.stats-section');
+        const numbers = document.querySelectorAll('.stat-number');
+        let started = false;
+
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        window.addEventListener('scroll', () => {
+            if (isInViewport(statsSection) && !started) {
+                numbers.forEach(num => {
+                    const target = parseInt(num.getAttribute('data-target'));
+                    let count = 0;
+                    const increment = target / 60;
+                    const updateCount = () => {
+                        if (count < target) {
+                            count += increment;
+                            num.innerText = Math.round(count);
+                            setTimeout(updateCount, 50);
+                        } else {
+                            num.innerText = target;
+                        }
+                    };
+                    updateCount();
+                });
+                started = true;
+            }
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from('.service-card', {
+            scrollTrigger: {
+                trigger: '.services',
+                start: 'top center',
+                toggleActions: 'play none none reverse'
+            },
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2
+        });
+    </script>
+</body>
+</html>
